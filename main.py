@@ -3,12 +3,13 @@ import asyncio
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from flask import Flask
 from threading import Thread
+import os
 
 # Telegram API ma'lumotlari
 API_ID = 26826024
 API_HASH = "58542e0c4c4d55b2aec530947649dc60"
 
-# Guruhlar ID ro'yxati (1754056696539 o‘chirildi)
+# Guruhlar ID ro'yxati
 TARGET_CHATS = [
     -1001572916927, -1001534022169, -1002370663987, -1001849762861, -1001701312606,
     -1001646703705, -1001481313340, -1001476894507, -1001701498277, -1001877275873,
@@ -56,14 +57,16 @@ async def main():
     print("✅ Userbot ishga tushdi")
     await asyncio.Event().wait()
 
-flask_app = Flask('')
+# Flask server
+flask_app = Flask(__name__)
 
 @flask_app.route('/')
 def home():
     return "Userbot ishlayapti!"
 
 def run():
-    flask_app.run(host='0.0.0.0', port=8080)
+    port = int(os.environ.get("PORT", 8080))
+    flask_app.run(host='0.0.0.0', port=port)
 
 def keep_alive():
     t = Thread(target=run)
@@ -72,3 +75,5 @@ def keep_alive():
 if name == "__main__":
     keep_alive()
     asyncio.run(main())
+
+    
